@@ -4,6 +4,22 @@ const { validarProductoExistente } = require('../middlewares/product.middleware'
 
 const router = Router()
 
+router.param('pid', (req, res, next, value) => {    
+    const isValid = /^[a-z0-9]+$/.test(value)
+    if (!isValid)
+        return res.status(400).send('Invalid param pid')
+    req.pid = value
+    next()
+})
+
+router.param('cid', (req, res, next, value) => {    
+    const isValid = /^[a-z0-9]+$/.test(value)
+    if (!isValid)
+        return res.status(400).send('Invalid param cid')
+    req.cid = value
+    next()
+})
+
 router.get('/', async (req, res) => {
     try {
         const CartManager = req.app.get('CartManager')
@@ -20,7 +36,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:cid', validarCarritoExistente, async (req, res) => {
     const CartManager = req.app.get('CartManager')
-    let cidCart = req.params.cid
+    let cidCart = req.cid
     let cartByCID = await CartManager.getCartByCId(cidCart)
     if (!cartByCID) {
         res.status(404).json({ error: "Id inexistente!" })  // HTTP 404 => el ID es válido, pero no se encontró ese carrito
@@ -47,8 +63,8 @@ router.post('/', validarNuevoCarrito, async (req, res) => {
 router.post('/:cid/products/:pid', validarCarritoExistente, validarProductoExistente, async (req, res) => {
     try {
         const CartManager = req.app.get('CartManager')
-        let idCart = req.params.cid;
-        let idProd = req.params.pid;
+        let idCart = req.cid;
+        let idProd = req.pid;
         let quantity = 1;
 
         await CartManager.addProductToCart(idCart, idProd, quantity);
@@ -64,7 +80,7 @@ router.post('/:cid/products/:pid', validarCarritoExistente, validarProductoExist
 router.put('/:cid', validarCarritoExistente, async (req, res) => {
     try {
         const CartManager = req.app.get('CartManager')
-        let cartId = req.params.cid;
+        let cartId = req.cid;
         const { products } = req.body;
 
         await CartManager.updateCartProducts(cartId, products);
@@ -80,8 +96,8 @@ router.put('/:cid', validarCarritoExistente, async (req, res) => {
 router.put('/:cid/products/:pid', validarCarritoExistente, validarProductoExistente, async (req, res) => {
     try {
         const CartManager = req.app.get('CartManager')
-        let cartId = req.params.cid;
-        let prodId = req.params.pid;
+        let cartId = req.cid;
+        let prodId = req.pid;
         const quantity = +req.body.quantity;        
 
         const result = await CartManager.addProductToCart(cartId, prodId, quantity);
@@ -102,7 +118,7 @@ router.put('/:cid/products/:pid', validarCarritoExistente, validarProductoExiste
 router.delete('/:cid', validarCarritoExistente, async (req, res) => {
     try {
         const CartManager = req.app.get('CartManager')
-        let cartId = req.params.cid;
+        let cartId = req.cid;
         await CartManager.deleteCart(cid)
         res.status(200).json({ message: "Carrito eliminado correctamente" })  // HTTP 200 OK     
     } catch (err) {
@@ -115,8 +131,8 @@ router.delete('/:cid', validarCarritoExistente, async (req, res) => {
 router.delete('/:cid/products/:pid', validarCarritoExistente, validarProductoExistente, async (req, res) => {
     try {
         const CartManager = req.app.get('CartManager')
-        let cartId = req.params.cid;
-        let prodId = req.params.pid;
+        let cartId = req.cid;
+        let prodId = req.pid;
 
         const result = await CartManager.deleteProductCart(cartId, prodId);
 
@@ -131,6 +147,10 @@ router.delete('/:cid/products/:pid', validarCarritoExistente, validarProductoExi
     catch (err) {
         return res.status(500).json({ message: err.message })
     }
+})
+
+router.get('*', (req, res) => {
+    res.status(404).send('Pagina no encontrada')
 })
 
 module.exports = router

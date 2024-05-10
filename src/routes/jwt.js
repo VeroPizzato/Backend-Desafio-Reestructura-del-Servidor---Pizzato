@@ -65,4 +65,8 @@ router.get('/current', passportMiddleware('jwt'), authorizationMiddleware('user'
 //     return res.json(req.user);  
 // });
 
+router.get('*', (req, res) => {
+    res.status(404).send('Pagina no encontrada')
+})
+
 module.exports = router

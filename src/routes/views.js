@@ -4,6 +4,22 @@ const { userIsLoggedIn, userIsNotLoggedIn, userIsAdmin }= require('../middleware
 
 const router = Router()
 
+router.param('pid', (req, res, next, value) => {    
+    const isValid = /^[a-z0-9]+$/.test(value)
+    if (!isValid)
+        return res.status(400).send('Invalid param pid')
+    req.pid = value
+    next()
+})
+
+router.param('cid', (req, res, next, value) => {    
+    const isValid = /^[a-z0-9]+$/.test(value)
+    if (!isValid)
+        return res.status(400).send('Invalid param cid')
+    req.cid = value
+    next()
+})
+
 router.get('/', (req, res) => {
     const isLoggedIn = ![null, undefined].includes(req.session.user)
 
@@ -70,7 +86,7 @@ router.get('/products/detail/:pid', userIsLoggedIn, async (req, res) => {
     try {
         const ProductManager = req.app.get('ProductManager')
 
-        const prodId = req.params.pid
+        const prodId = req.pid
         const product = await ProductManager.getProductById(prodId)
 
         let data = {
@@ -92,7 +108,7 @@ router.get('/products/detail/:pid', userIsLoggedIn, async (req, res) => {
 router.get('/products/addCart/:pid', userIsLoggedIn,  async (req, res) => {
     try {
         const CartManager = req.app.get('CartManager')        
-        const prodId = req.params.pid        
+        const prodId = req.pid        
         //agrego una unidad del producto al primer carrito que siempre existe
         const carts = await CartManager.getCarts()
         // console.log(JSON.stringify(carts, null, '\t'))    
@@ -107,7 +123,7 @@ router.get('/products/addCart/:pid', userIsLoggedIn,  async (req, res) => {
 router.get('/carts/:cid', userIsLoggedIn, async (req, res) => {
     try {
         const CartManager = req.app.get('CartManager')
-        const cartId = req.params.cid
+        const cartId = req.cid
         const cart = await CartManager.getCartByCId(cartId)             
 
         let data = {
@@ -187,5 +203,8 @@ router.get('/chat', (_, res) => {
     })
 })
 
+router.get('*', (req, res) => {
+    res.status(404).send('Pagina no encontrada')
+})
 
 module.exports = router

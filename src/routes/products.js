@@ -3,6 +3,14 @@ const { validarNuevoProducto, validarProductoExistente, validarProdActualizado }
 
 const router = Router()
 
+router.param('pid', (req, res, next, value) => {    
+    const isValid = /^[a-z0-9]+$/.test(value)
+    if (!isValid)
+        return res.status(400).send('Invalid param pid')
+    req.pid = value
+    next()
+})
+
 router.get('/', async (req, res) => {
     try {      
         const ProductManager = req.app.get('ProductManager')  
@@ -40,7 +48,7 @@ router.get('/', async (req, res) => {
 router.get('/:pid', validarProductoExistente, async (req, res) => {    
     try {        
         const ProductManager = req.app.get('ProductManager')
-        const prodId  = req.params.pid        
+        const prodId  = req.pid   
         const producto = await ProductManager.getProductById(prodId)
         if (!producto) {
              res.status(404).json({ error: "Id inexistente!" })  // HTTP 404 => el ID es válido, pero no se encontró ese producto
@@ -64,7 +72,7 @@ router.post('/', validarNuevoProducto, async (req, res) => {
 router.put('/:pid', validarProductoExistente, validarProdActualizado, async (req, res) => {
     try {
         const ProductManager = req.app.get('ProductManager')
-        const prodId = req.params.pid        
+        const prodId = req.pid        
         const datosAUpdate = req.body
         // if (isNaN(prodId)){
         //     res.status(400).json({ error: "Invalid number format" })
@@ -87,7 +95,7 @@ router.put('/:pid', validarProductoExistente, validarProdActualizado, async (req
 router.delete('/:pid', validarProductoExistente, async (req, res) => {
     try {
         const ProductManager = req.app.get('ProductManager')
-        const prodId = req.params.pid       
+        const prodId = req.pid       
         const producto = await ProductManager.getProductById(prodId)
         if (!producto) {
             res.status(404).json({ error: "Id inexistente!" })  // HTTP 404 => el ID es válido, pero no se encontró ese producto
@@ -101,6 +109,10 @@ router.delete('/:pid', validarProductoExistente, async (req, res) => {
             message: err.message
         })
     }
+})
+
+router.get('*', (req, res) => {
+    res.status(404).send('Pagina no encontrada')
 })
 
 module.exports =  router 
