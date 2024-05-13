@@ -10,6 +10,7 @@ const { dbName, mongoURL} = require('./dbConfig')
 const sessionRouter = require('./routes/session')
 const jwtRouter = require('./routes/jwt')
 const cookieParser = require('cookie-parser')
+const config = require('./config')
 
 const cartsRouter = require('./routes/carts')
 // const { router: productsRouter, productsManager } = require('./routes/products')
@@ -50,16 +51,16 @@ app.use('/products/detail', express.static(`${__dirname}/../public`));  // para 
 app.use('/carts', express.static(`${__dirname}/../public`));
 
 app.use(session({
+    // store: MongoStore.create({
+    //     dbName: config.DB_NAME,
+    //     mongoUrl: config.MONGO_URL, 
+    //     ttl: 60
+    // }),    
     store: MongoStore.create({
-        dbName: 'ecommerce',
-        mongoUrl: 'mongodb+srv://verizzato:Mavepi76@codercluster.wmmycws.mongodb.net/?retryWrites=true&w=majority&appName=CoderCluster', 
+        dbName,
+        mongoURL, 
         ttl: 60
     }),
-    // store: MongoStore.create({
-    //     dbName,
-    //     mongoURL, 
-    //     ttl: 60
-    // }),
     secret: 'secretCoder',
     resave: true,
     saveUninitialized: true
@@ -76,15 +77,17 @@ app.use('/', viewsRouter)
 app.use('/api/sessions', sessionRouter)
 app.use('/api', jwtRouter)
 
+console.log(config)
+
 const main = async () => {
 
     // await mongoose.connect(mongoURL, {dbName})
-
-    await mongoose.connect('mongodb+srv://verizzato:Mavepi76@codercluster.wmmycws.mongodb.net/?retryWrites=true&w=majority&appName=CoderCluster',
+    
+    await mongoose.connect(config.MONGO_URL,
         {
-            dbName: 'ecommerce'
+            dbName: config.DB_NAME
         })
-
+   
     const ProductManager = new DbProductManager()
     await ProductManager.inicialize()
     app.set('ProductManager', ProductManager)
@@ -103,7 +106,7 @@ const main = async () => {
     // await CartManager.inicialize()
     // app.set('CartManager', CartManager)
 
-    const httpServer = app.listen(8080, () => {
+    const httpServer = app.listen(config.PORT, () => {
         console.log('Servidor listo!!')
     })
 

@@ -3,9 +3,10 @@ const localStrategy = require('passport-local')
 const githubStrategy = require('passport-github2')
 const User = require('../dao/models/user')
 const { hashPassword, isValidPassword } = require('../utils/hashing')
-const { clientID, clientSecret, callbackURL } = require('./github.private')
-const { secret } = require('../utils/jwt')
+// const { clientID, clientSecret, callbackURL } = require('./github.private')
+//const { secret } = require('../utils/jwt')
 const { Strategy, ExtractJwt } = require('passport-jwt')
+const config = require('../config')
 
 const LocalStrategy = localStrategy.Strategy
 const GithubStrategy = githubStrategy.Strategy
@@ -17,7 +18,7 @@ const initializeStrategy = () => {
     
     passport.use('jwt', new JwtStrategy({
         jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-        secretOrKey: secret
+        secretOrKey: config.SECRET
     }, async (jwtPayload, done) => {
         try {
             return done(null, jwtPayload.user)  // req.user
@@ -27,9 +28,9 @@ const initializeStrategy = () => {
     }))
 
     passport.use('github', new GithubStrategy({
-        clientID,
-        clientSecret,
-        callbackURL
+        clientID: config.CLIENT_ID,
+        clientSecret: config.CLIENT_SECRET,
+        callbackURL: config.CALLBACK_URL
     }, async (_accessToken, _refreshToken, profile, done) => {
         try {
             console.log('Profile de github: ', profile, profile._json)
