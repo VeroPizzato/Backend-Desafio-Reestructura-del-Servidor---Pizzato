@@ -55,12 +55,7 @@ app.use(session({
         dbName: config.DB_NAME,
         mongoUrl: config.MONGO_URL, 
         ttl: 60
-    }),    
-    // store: MongoStore.create({
-    //     dbName,
-    //     mongoURL, 
-    //     ttl: 60
-    // }),
+    }),  
     secret: 'secretCoder',
     resave: true,
     saveUninitialized: true
@@ -81,8 +76,6 @@ console.log(config)
 
 const main = async () => {
 
-    // await mongoose.connect(mongoURL, {dbName})
-    
     await mongoose.connect(config.MONGO_URL,
         {
             dbName: config.DB_NAME
