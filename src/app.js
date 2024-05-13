@@ -10,7 +10,7 @@ const { dbName, mongoURL} = require('./dbConfig')
 const sessionRouter = require('./routes/session')
 const jwtRouter = require('./routes/jwt')
 const cookieParser = require('cookie-parser')
-const config = require('./config')
+const config = require('./config/config')
 
 const cartsRouter = require('./routes/carts')
 // const { router: productsRouter, productsManager } = require('./routes/products')
@@ -51,16 +51,16 @@ app.use('/products/detail', express.static(`${__dirname}/../public`));  // para 
 app.use('/carts', express.static(`${__dirname}/../public`));
 
 app.use(session({
-    // store: MongoStore.create({
-    //     dbName: config.DB_NAME,
-    //     mongoUrl: config.MONGO_URL, 
-    //     ttl: 60
-    // }),    
     store: MongoStore.create({
-        dbName,
-        mongoURL, 
+        dbName: config.DB_NAME,
+        mongoUrl: config.MONGO_URL, 
         ttl: 60
-    }),
+    }),    
+    // store: MongoStore.create({
+    //     dbName,
+    //     mongoURL, 
+    //     ttl: 60
+    // }),
     secret: 'secretCoder',
     resave: true,
     saveUninitialized: true
