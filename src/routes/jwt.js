@@ -5,6 +5,7 @@ const { generateToken, verifyToken } = require('../utils/jwt')
 // const passport = require('passport')
 const passportMiddleware = require('../utils/passportMiddleware')
 const authorizationMiddleware = require('../utils/authorizationMiddleware')
+const config = require('../config/config')
 
 const router = Router()
 
@@ -16,13 +17,13 @@ router.post('/login', async (req, res) => {
     }
     
     let user
-    if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
+    if (email === config.ADMIN_EMAIL && password === config.ADMIN_PASSWORD) {
         // Datos de sesión para el usuario coder Admin
         user = {                    
             first_name: "Usuario",
             last_name: "de CODER", 
             age: 21,
-            email: "adminCoder@coder.com",  
+            email: config.ADMIN_EMAIL,  
             cart: null,                    
             rol: "admin",
             _id: "jhhasgñjglsargj355ljasg"
@@ -57,7 +58,7 @@ router.get('/private', verifyToken, (req, res) => {
 // })
 
 // Para devolver un error mas significativo durante mis estrategias de passport si no le mando token o mando un token erroneo
-router.get('/current', passportMiddleware('jwt'), authorizationMiddleware('user'), async (req, res) => { 
+router.get('/current', passportMiddleware('jwt'), /*authorizationMiddleware('user'),*/ async (req, res) => { 
     return res.json(req.user);  
 });
 
@@ -65,8 +66,8 @@ router.get('/current', passportMiddleware('jwt'), authorizationMiddleware('user'
 //     return res.json(req.user);  
 // });
 
-router.get('*', (req, res) => {
-    res.status(404).send('Pagina no encontrada')
-})
+// router.get('*', (req, res) => {
+//     res.status(404).send('Pagina no encontrada')
+// })
 
 module.exports = router

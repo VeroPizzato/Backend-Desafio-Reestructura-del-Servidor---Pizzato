@@ -111,9 +111,9 @@ router.delete('/:pid', validarProductoExistente, async (req, res) => {
     }
 })
 
-router.get('*', (req, res) => {
-    res.status(404).send('Pagina no encontrada')
-})
+// router.get('*', (req, res) => {
+//     res.status(404).send('Pagina no encontrada')
+// })
 
 module.exports =  router 
 

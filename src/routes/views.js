@@ -66,7 +66,7 @@ router.get('/profile', userIsLoggedIn,  (req, res) => {
 })
 
 router.get('/products', userIsLoggedIn, async (req, res) => {
-    try {
+    try {     
         const ProductManager = req.app.get('ProductManager')
         let products = await ProductManager.getProducts(req.query)
         let user = req.session.user     
@@ -203,8 +203,8 @@ router.get('/chat', (_, res) => {
     })
 })
 
-router.get('*', (req, res) => {
-    res.status(404).send('Pagina no encontrada')
-})
+// router.get('*', (req, res) => {
+//     res.status(404).send('Pagina no encontrada')
+// })
 
 module.exports = router

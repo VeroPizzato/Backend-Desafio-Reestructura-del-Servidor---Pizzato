@@ -149,8 +149,8 @@ router.delete('/:cid/products/:pid', validarCarritoExistente, validarProductoExi
     }
 })
 
-router.get('*', (req, res) => {
-    res.status(404).send('Pagina no encontrada')
-})
+// router.get('*', (req, res) => {
+//     res.status(404).send('encontrada')
+// })
 
 module.exports = router

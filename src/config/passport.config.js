@@ -135,7 +135,7 @@ const initializeStrategy = () => {
             }
 
             let user = await User.findOne({ email: username });
-            if (username === "adminCoder@coder.com" && password === "adminCod3r123") {
+            if (username === config.ADMIN_EMAIL && password === config.ADMIN_PASSWORD) {
                 // Datos de sesión para el usuario coder Admin
                 user = {
                     first_name: "Usuario",
@@ -171,7 +171,7 @@ const initializeStrategy = () => {
     // simplemente podemos usar su id
     passport.serializeUser((user, done) => {
         console.log('serialized!', user)
-        if (user.email === "adminCoder@coder.com") {
+        if (user.email === config.ADMIN_EMAIL) {
             // Serialización especial para el usuario 'adminCoder@coder.com'
             done(null, { first_name: user.first_name, last_name: user.last_name, age: user.age, email: user.email, rol: user.rol });
         } else {
@@ -183,7 +183,7 @@ const initializeStrategy = () => {
     // el cual colocará en req.user para que nosotros podamos usar
     passport.deserializeUser(async (id, done) => {
         console.log('deserialized!', id)
-        if (id.email === 'adminCoder@coder.com') {
+        if (id.email === config.ADMIN_EMAIL) {
             // Deserialización especial para el usuario 'adminCoder@coder.com'
             done(null, id);
         } else {

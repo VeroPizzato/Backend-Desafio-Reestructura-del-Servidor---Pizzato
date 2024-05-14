@@ -1,14 +1,15 @@
 const { Router } = require('express')
 const User = require('../dao/models/user')
-const { hashPassword } = require('../utils/hashing')
+//const { hashPassword } = require('../utils/hashing')
 const passport = require('passport')
-const passportMiddleware = require('../utils/passportMiddleware')
-const authorizationMiddleware = require('../utils/authorizationMiddleware')
+// const passportMiddleware = require('../utils/passportMiddleware')
+// const authorizationMiddleware = require('../utils/authorizationMiddleware')
 
 const router = Router()
 
 // agregamos el middleware de passport para el login
 router.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/faillogin' }), async (req, res) => {
+    console.log("holaaaa")
     if (!req.user) return res.status(400).send('Invalid credentials!')
     // crear nueva sesión si el usuario existe   
     req.session.user = { first_name: req.user.first_name, last_name: req.user.last_name, age: req.user.age, email: req.user.email, rol: req.user.rol }   
@@ -56,8 +57,8 @@ router.get('/current', (req, res) => {
     res.redirect('/profile')
 })
 
-router.get('*', (req, res) => {
-    res.status(404).send('Pagina no encontrada')
-})
+// router.get('*', (req, res) => {
+//     res.status(404).send('Pagina no encontrada')
+// })
 
 module.exports = router
