@@ -84,19 +84,7 @@ class ProductManager {
         const id = ProductManager.#ultimoIdProducto
         ProductManager.#ultimoIdProducto++
         return id
-    }
-
-    soloNumYletras = (code) => {
-        return (/^[a-z A-Z 0-9]+$/.test(code))
-    }
-
-    soloNumPositivos = (code) => {
-        return (/^[0-9]+$/.test(code) && (code > 0))
-    }
-
-    soloNumPositivosYcero = (code) => {
-        return (/^[0-9]+$/.test(code) && (code >= 0))
-    }
+    }   
 
     addProduct = async (title, description, price, thumbnail, code, stock, status, category) => {
         let product = await ProductModel.create({

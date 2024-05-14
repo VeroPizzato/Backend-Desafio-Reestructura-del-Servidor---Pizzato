@@ -57,8 +57,4 @@ router.get('/current', (req, res) => {
     res.redirect('/profile')
 })
 
-// router.get('*', (req, res) => {
-//     res.status(404).send('Pagina no encontrada')
-// })
-
 module.exports = router
