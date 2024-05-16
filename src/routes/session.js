@@ -1,60 +1,67 @@
-const { Router } = require('express')
 const User = require('../dao/models/user')
 //const { hashPassword } = require('../utils/hashing')
 const passport = require('passport')
 // const passportMiddleware = require('../utils/passportMiddleware')
 // const authorizationMiddleware = require('../utils/authorizationMiddleware')
 
-const router = Router()
+const Router = require('./router')
 
-// agregamos el middleware de passport para el login
-router.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/faillogin' }), async (req, res) => {
-    console.log("holaaaa")
-    if (!req.user) return res.status(400).send('Invalid credentials!')
-    // crear nueva sesión si el usuario existe   
-    req.session.user = { first_name: req.user.first_name, last_name: req.user.last_name, age: req.user.age, email: req.user.email, rol: req.user.rol }   
-    res.redirect('/products')
-})
+class SessionRouter extends Router {
+    init() {
 
-router.get('/faillogin', (req, res) => {
-    res.send({ status: 'error', message: 'Login failed!' })
-})
+        // agregamos el middleware de passport para el login
+        this.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/faillogin' }), async (req, res) => {
+            console.log("holaaaa")
+            if (!req.user) return res.sendUserError('Invalid credentials!')
+            //if (!req.user) return res.status(400).send('Invalid credentials!')
+            // crear nueva sesión si el usuario existe   
+            req.session.user = { first_name: req.user.first_name, last_name: req.user.last_name, age: req.user.age, email: req.user.email, rol: req.user.rol }
+            res.redirect('/products')
+        })
 
-router.get('/logout', (req, res) => {
-    req.session.destroy(_ => {
-        res.redirect('/')
-    })
-})
+        this.get('/faillogin', (req, res) => {
+            res.send({ status: 'error', message: 'Login failed!' })
+        })
 
-// agregamos el middleware de passport para el register
-router.post('/register', passport.authenticate('register', { failureRedirect: '/api/sessions/failregister' }), async (req, res) => {
-    console.log(req.body)
-    // no es necesario registrar el usuario aquí, ya lo hacemos en la estrategia!
-    res.redirect('/login')
-})
+        this.get('/logout', (req, res) => {
+            req.session.destroy(_ => {
+                res.redirect('/')
+            })
+        })
 
-router.get('/failregister', (req, res) => {
-    res.send({ status: 'error', message: 'Register failed!' })
-})
+        // agregamos el middleware de passport para el register
+        this.post('/register', passport.authenticate('register', { failureRedirect: '/api/sessions/failregister' }), async (req, res) => {
+            console.log(req.body)
+            // no es necesario registrar el usuario aquí, ya lo hacemos en la estrategia!
+            res.redirect('/login')
+        })
 
-router.post('/reset_password', passport.authenticate('reset_password', { failureRedirect: '/api/sessions/failreset' }), async (req, res) =>  {
-       res.redirect('/login')
-})
+        this.get('/failregister', (req, res) => {
+            res.send({ status: 'error', message: 'Register failed!' })
+        })
 
-router.get('/failreset', (req, res) => {
-    res.send({ status: 'error', message: 'Reset password failed!' })
-})
-router.get('/github', passport.authenticate('github', { scope: ['user:email'] }), (req, res) => { })
+        this.post('/reset_password', passport.authenticate('reset_password', { failureRedirect: '/api/sessions/failreset' }), async (req, res) => {
+            res.redirect('/login')
+        })
 
-router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }), (req, res) => {
-    req.session.user = req.user
-    res.redirect('/products')
-})
+        this.get('/failreset', (req, res) => {
+            res.send({ status: 'error', message: 'Reset password failed!' })
+        })
 
-router.get('/current', (req, res) => {
-    if (!req.user) return res.status(400).send('No hay usuario logueado')
-    req.session.user = { first_name: req.user.first_name, last_name: req.user.last_name, age: req.user.age, email: req.user.email, rol: req.user.rol }   
-    res.redirect('/profile')
-})
+        this.get('/github', passport.authenticate('github', { scope: ['user:email'] }), (req, res) => { })
 
-module.exports = router
+        this.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }), (req, res) => {
+            req.session.user = req.user
+            res.redirect('/products')
+        })
+
+        this.get('/current', (req, res) => {
+            if (!req.user) return res.sendUserError('No hay usuario logueado')
+            //if (!req.user) return res.status(400).send('No hay usuario logueado')
+            req.session.user = { first_name: req.user.first_name, last_name: req.user.last_name, age: req.user.age, email: req.user.email, rol: req.user.rol }
+            res.redirect('/profile')
+        })
+    }
+}
+
+module.exports = SessionRouter

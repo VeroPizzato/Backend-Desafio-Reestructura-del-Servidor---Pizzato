@@ -10,13 +10,13 @@ const generateToken = user => {
 
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization  // Authorization: "Bearer token"
-    if (!authHeader) {
+    if (!authHeader) {        
         return res.status(401).json({ error: 'Not authenticated!' })
     }
 
     const [, token] = authHeader.split(' ')
     jwt.verify(token, PRIVATE_KEY, (err, signedPayload) => {
-        if (err) {
+        if (err) {           
             return res.status(403).json({ error: 'Invalid access token!' })
         }
 

@@ -8,7 +8,7 @@ const passportMiddleware = (strategy) => {
                 return next(err)
             }
 
-            if (!user) {
+            if (!user) {                
                 return res.status(401).send({
                     error: info && info.message ? info.message : info.toString()
                 })

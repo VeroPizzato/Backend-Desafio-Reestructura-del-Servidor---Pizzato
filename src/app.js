@@ -1,19 +1,26 @@
 const express = require('express')
-// const handlebars = require('express-handlebars')
 const handlebarsExpress = require('express-handlebars')
-const viewsRouter = require('./routes/views')
 const { Server } = require('socket.io')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
-const sessionRouter = require('./routes/session')
-const jwtRouter = require('./routes/jwt')
 const cookieParser = require('cookie-parser')
 const config = require('./config/config')
 
-const cartsRouter = require('./routes/carts')
-// const { router: productsRouter, productsManager } = require('./routes/products')
-const productsRouter = require('./routes/products')
+const CartsRouter = require('./routes/carts')
+const cartsRouter = new CartsRouter()
+
+const ProductsRouter = require('./routes/products')
+const productsRouter = new ProductsRouter()
+
+const SessionRouter = require('./routes/session')
+const sessionRouter = new SessionRouter()
+
+const JwtRouter = require('./routes/jwt')
+const jwtRouter = new JwtRouter()
+
+const ViewsRouter = require('./routes/views')
+const viewsRouter = new ViewsRouter()
 
 const chatModel = require('./dao/models/chat')
 
@@ -65,11 +72,11 @@ initializeStrategy()
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use('/api/products', productsRouter)
-app.use('/api/carts', cartsRouter)
-app.use('/', viewsRouter)
-app.use('/api/sessions', sessionRouter)
-app.use('/api', jwtRouter)
+app.use('/api/products', productsRouter.getRouter())
+app.use('/api/carts', cartsRouter.getRouter())
+app.use('/', viewsRouter.getRouter())
+app.use('/api/sessions', sessionRouter.getRouter())
+app.use('/api', jwtRouter.getRouter())
 
 console.log(config)
 
