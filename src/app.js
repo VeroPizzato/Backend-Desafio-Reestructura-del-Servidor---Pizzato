@@ -7,19 +7,31 @@ const MongoStore = require('connect-mongo')
 const cookieParser = require('cookie-parser')
 const config = require('./config/config')
 
-const CartsRouter = require('./routes/carts')
+const routes = [
+    require('./routes/carts.router'),
+    require('./routes/products.router'),
+    require('./routes/session.router'),
+    require('./routes/jwt.router'),
+    require('./routes/views.router')
+]
+
+for (const route of routes) {
+    route.configure(app)
+}
+
+const CartsRouter = require('./routes/carts.router')
 const cartsRouter = new CartsRouter()
 
-const ProductsRouter = require('./routes/products')
+const ProductsRouter = require('./routes/products.router')
 const productsRouter = new ProductsRouter()
 
-const SessionRouter = require('./routes/session')
+const SessionRouter = require('./routes/session.router')
 const sessionRouter = new SessionRouter()
 
-const JwtRouter = require('./routes/jwt')
+const JwtRouter = require('./routes/jwt.router')
 const jwtRouter = new JwtRouter()
 
-const ViewsRouter = require('./routes/views')
+const ViewsRouter = require('./routes/views.router')
 const viewsRouter = new ViewsRouter()
 
 const chatModel = require('./dao/models/chat')
