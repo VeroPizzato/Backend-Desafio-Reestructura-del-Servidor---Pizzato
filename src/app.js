@@ -7,18 +7,6 @@ const MongoStore = require('connect-mongo')
 const cookieParser = require('cookie-parser')
 const config = require('./config/config')
 
-const routes = [
-    require('./routes/carts.router'),
-    require('./routes/products.router'),
-    require('./routes/session.router'),
-    require('./routes/jwt.router'),
-    require('./routes/views.router')
-]
-
-for (const route of routes) {
-    route.configure(app)
-}
-
 const CartsRouter = require('./routes/carts.router')
 const cartsRouter = new CartsRouter()
 
@@ -84,13 +72,17 @@ initializeStrategy()
 app.use(passport.initialize())
 app.use(passport.session())
 
+app.set('carts.storage', new CartsStorage())
+app.set('jwt.storage', new JwtStorage())
+app.set('products.storage', new ProductsStorage())
+app.set('session.storage', new SessionStorage())
+app.set('views.storage', new ViewsStorage())
+
 app.use('/api/products', productsRouter.getRouter())
 app.use('/api/carts', cartsRouter.getRouter())
 app.use('/', viewsRouter.getRouter())
 app.use('/api/sessions', sessionRouter.getRouter())
 app.use('/api', jwtRouter.getRouter())
-
-console.log(config)
 
 const main = async () => {
 
