@@ -4,7 +4,7 @@ const Router = require('./router')
 
 class ProductsRouter extends Router {
     init() {
-        this.param('pid', (req, res, next, value) => {
+        this.router.param('pid', (req, res, next, value) => {
             const isValid = /^[a-z0-9]+$/.test(value)
             if (!isValid)
                 res.sendUserError(err)

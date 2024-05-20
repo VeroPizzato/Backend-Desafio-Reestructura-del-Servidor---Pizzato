@@ -4,37 +4,37 @@ class CartsService {
         this.storage = storage
     }
 
-    getAll = async() => {
-        return await this.storage.getAll()
+    getCarts = async() => {
+        return await this.storage.getCarts()
     }
 
-    getById = async(cid) => {
-        return await this.storage.getById(cid)
+    getCartByCId = async(cid) => {
+        return await this.storage.getCartByCId(cid)
     }
 
-    createOne = async (products) => {
-        await this.storage.createOne(products)
+    addCart = async (products) => {
+        await this.storage.addCart(products)
     }
 
-    createOneToCart = async (idCart, idProd, quantity) => {        
-        await this.storage.createOneToCart(idCart, idProd, quantity);       
+    addProductToCart = async (cartId, prodId, quantity) => {        
+        await this.storage.addProductToCart(cartId, prodId, quantity);       
     }
 
-    updateOne = async (cartId, products) => {  
-        await this.storage.updateOne(cartId, products)
+    updateCartProducts = async (cartId, products) => {  
+        await this.storage.updateCartProducts(cartId, products)
+    }   
+
+    deleteCart = async (cid) => {
+        await this.storage.deleteCart(cid)
     }
 
-    updateOneToCart = async (cartId, prodId, quantity) => {
-        return await this.storage.updateOneToCart(cartId, prodId, quantity)
+    deleteProductToCart = async (cartId, prodId) => {
+        return await this.storage.deleteProductToCart(cartId, prodId)
     }
 
-    deleteById = async (cid) => {
-        await this.storage.deleteById(cid)
-    }
-
-    deleteByIdToCart = async (cartId, prodId) => {
-        return await this.service.deleteByIdToCart(cartId, prodId)
-    }
+    // deleteAllProductCart = async (cartId) => {
+    //     return await this.storage.deleteAllProductCart(cartId)
+    // }
 }
 
 module.exports = { CartsService }

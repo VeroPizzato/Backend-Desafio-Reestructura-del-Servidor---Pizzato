@@ -90,30 +90,30 @@ class CartManager {
         await CartModel.deleteOne({ _id: cid });
     }  
 
-    clearCart = async (cid) => {
+    deleteAllProductCart = async (cid) => {
         //obtengo el carrito
         const cart = await this.getCartByCId(cid)
         cart.products = []
         await CartModel.updateOne({ _id: cid }, cart)
     }
 
-    deleteProductCart = async (cid, pid) => {
-        //obtengo el carrito
-        const cart = await this.getCartByCId(cid)
-        //obtengo los productos del carrito        
-        const productsFromCart = cart.products
-        const productIndex = productsFromCart.findIndex(item => item._id.toString() === pid)
-        if (productIndex != -1) {
-            //existe el producto en el carrito, puedo eliminarlo
-            productsFromCart.splice(productIndex, 1)
-            await CartModel.updateOne({ _id: cid }, cart)
-            return true
-        }
-        else {
-            // no existe el producto en el carito
-            return false
-        }
-    }
+    // deleteProductCart = async (cid, pid) => {
+    //     //obtengo el carrito
+    //     const cart = await this.getCartByCId(cid)
+    //     //obtengo los productos del carrito        
+    //     const productsFromCart = cart.products
+    //     const productIndex = productsFromCart.findIndex(item => item._id.toString() === pid)
+    //     if (productIndex != -1) {
+    //         //existe el producto en el carrito, puedo eliminarlo
+    //         productsFromCart.splice(productIndex, 1)
+    //         await CartModel.updateOne({ _id: cid }, cart)
+    //         return true
+    //     }
+    //     else {
+    //         // no existe el producto en el carito
+    //         return false
+    //     }
+    // }
 }
 
 module.exports = CartManager

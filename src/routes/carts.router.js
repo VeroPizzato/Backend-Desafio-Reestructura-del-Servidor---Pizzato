@@ -4,13 +4,12 @@ const { CartsController } = require('../controllers/carts.controller')
 const { CartsService } = require('../services/cartsService')
 
 const Router = require('./router')
-const { Controller } = require('../controllers/carts.controller')
 
 const withController = callback => {
     return (req, res) => {
         const service = new CartsService(
             req.app.get('carts.storage')
-        )
+        )                       
         const controller = new CartsController(service)
         return callback(controller, req, res)
     }
@@ -18,7 +17,7 @@ const withController = callback => {
 
 class CartsRouter extends Router {
     init() {
-        this.param('pid', (req, res, next, value) => {
+        this.router.param('pid', (req, res, next, value) => {
             const isValid = /^[a-z0-9]+$/.test(value)
             if (!isValid)
                 return sendUserError('Invalid param pid')
@@ -27,8 +26,8 @@ class CartsRouter extends Router {
             next()
         })
 
-        this.param('cid', (req, res, next, value) => {
-            const isValid = /^[a-z0-9]+$/.test(value)
+        this.router.param('cid', (req, res, next, value) => {
+            const isValid = /^[a-z0-9]+$/.test(value)            
             if (!isValid)
                 return sendUserError('Invalid param cid')
                 //return res.status(400).send('Invalid param cid')
@@ -36,21 +35,23 @@ class CartsRouter extends Router {
             next()
         })
 
-        this.get('/', withController((controller, req, res) => controller.getAll(req, res)))
+        this.get('/', withController((controller, req, res) => controller.getCarts(req, res)))
 
-        this.get('/:cid', validarCarritoExistente, withController((controller, req, res) => controller.getById(req, res)))     
+        this.get('/:cid', validarCarritoExistente, withController((controller, req, res) => controller.getCartByCId(req, res)))     
 
-        this.post('/', validarNuevoCarrito, withController((controller, req, res) => controller.createOne(req, res))) 
+        this.post('/', validarNuevoCarrito, withController((controller, req, res) => controller.addCart(req, res))) 
 
-        this.post('/:cid/products/:pid', validarCarritoExistente, withController((controller, req, res) => controller.createOneToCart(req, res)))
+        this.post('/:cid/products/:pid', validarCarritoExistente, withController((controller, req, res) => controller.createProductToCart(req, res)))
   
-        this.put('/:cid', validarCarritoExistente, withController((controller, req, res) => controller.updateOne(req, res)))
+        this.put('/:cid', validarCarritoExistente, withController((controller, req, res) => controller.updateCartProducts(req, res)))
 
-        this.put('/:cid/products/:pid', validarCarritoExistente, validarProductoExistente, withController((controller, req, res) => controller.updateOneToCart(req, res))) 
+        this.put('/:cid/products/:pid', validarCarritoExistente, validarProductoExistente, withController((controller, req, res) => controller.updateProductToCart(req, res))) 
      
-        this.delete('/:cid', validarCarritoExistente, withController((controller, req, res) => controller.deleteById(req, res)))
+        this.delete('/:cid', validarCarritoExistente, withController((controller, req, res) => controller.deleteCart(req, res)))
      
-        this.delete('/:cid/products/:pid', validarCarritoExistente, validarProductoExistente, withController((controller, req, res) => controller.deleteByIdToCart(req, res)))      
+        this.delete('/:cid/products/:pid', validarCarritoExistente, validarProductoExistente, withController((controller, req, res) => controller.deleteProductToCart(req, res)))      
+
+        //this.delete('/:cid', validarCarritoExistente, withController((controller, req, res) => controller.deleteAllProductCart(req, res)))
     }
 }
 

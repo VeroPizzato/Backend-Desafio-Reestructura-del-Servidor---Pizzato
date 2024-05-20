@@ -5,7 +5,7 @@ const Router = require('./router')
 
 class ViewsRouter extends Router {
     init() {
-        this.param('pid', (req, res, next, value) => {
+        this.router.param('pid', (req, res, next, value) => {
             const isValid = /^[a-z0-9]+$/.test(value)
             if (!isValid)
                 return res.sendUserError('Invalid param pid')
@@ -14,7 +14,7 @@ class ViewsRouter extends Router {
             next()
         })
 
-        this.param('cid', (req, res, next, value) => {
+        this.router.param('cid', (req, res, next, value) => {
             const isValid = /^[a-z0-9]+$/.test(value)
             if (!isValid)
                 return res.sendUserError('Invalid param cid')
@@ -22,7 +22,7 @@ class ViewsRouter extends Router {
             req.cid = value
             next()
         })
-
+        
         this.get('/', (req, res) => {
             const isLoggedIn = ![null, undefined].includes(req.session.user)
 
