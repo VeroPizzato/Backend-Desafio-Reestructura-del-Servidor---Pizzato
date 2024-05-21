@@ -1,4 +1,4 @@
-const CartModel = require('../models/cart')
+const CartModel = require('../models/cart.model')
 
 class CartManager {
 

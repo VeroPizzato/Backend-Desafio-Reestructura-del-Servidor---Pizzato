@@ -1,4 +1,4 @@
-const ProductModel = require('../dao/models/products')
+const ProductModel = require('../dao/models/products.model')
 
 class ProductsStorage {
 

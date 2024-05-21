@@ -7,10 +7,8 @@ const MongoStore = require('connect-mongo')
 const cookieParser = require('cookie-parser')
 const config = require('./config/config')
 const { CartsStorage } = require('./persistence/carts.storage')
-const { JwtStorage } = require('./persistence/jwtStorage')
-const { ProductsStorage } = require('./persistence/productsStorage')
-const { SessionStorage } = require('./persistence/sessionStorage')
-const { ViewsStorage } = require('./persistence/viewsStorage')
+const { JwtStorage } = require('./persistence/jwt.storage')
+const { ProductsStorage } = require('./persistence/products.storage')
 
 const CartsRouter = require('./routes/carts.router')
 const cartsRouter = new CartsRouter()
@@ -27,7 +25,7 @@ const jwtRouter = new JwtRouter()
 const ViewsRouter = require('./routes/views.router')
 const viewsRouter = new ViewsRouter()
 
-const chatModel = require('./dao/models/chat')
+const chatModel = require('./dao/models/chat.model')
 
 const FilesProductManager = require('./dao/fileManagers/ProductManager')
 const DbProductManager = require('./dao/dbManagers/ProductManager')
@@ -98,11 +96,7 @@ const main = async () => {
 
     const productsStorage = new ProductsStorage();
     await productsStorage.inicialize()
-    app.set('products.storage', productsStorage)
-
-    app.set('session.storage', new SessionStorage())
-    
-    app.set('views.storage', new ViewsStorage())
+    app.set('products.storage', productsStorage) 
 
     // const ProductManager = new DbProductManager()
     // await ProductManager.inicialize()

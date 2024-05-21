@@ -1,12 +1,10 @@
-const User = require('../dao/models/user')
+const User = require('../dao/models/user.model')
 //const { hashPassword } = require('../utils/hashing')
 const passport = require('passport')
 // const passportMiddleware = require('../utils/passportMiddleware')
 // const authorizationMiddleware = require('../utils/authorizationMiddleware')
 const { SessionController } = require('../controllers/session.controller')
-
 const Router = require('./router')
-
 
 const withController = callback => {
     return (req, res) => {                       

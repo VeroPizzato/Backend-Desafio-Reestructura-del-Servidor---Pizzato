@@ -1,7 +1,7 @@
 const passport = require('passport')
 const localStrategy = require('passport-local')
 const githubStrategy = require('passport-github2')
-const User = require('../dao/models/user')
+const User = require('../dao/models/user.model')
 const { hashPassword, isValidPassword } = require('../utils/hashing')
 const { Strategy, ExtractJwt } = require('passport-jwt')
 const config = require('../config/config')

@@ -1,6 +1,6 @@
 const { validarNuevoProducto, validarProductoExistente, validarProdActualizado } = require('../middlewares/product.middleware')
 const { ProductsController } = require('../controllers/products.controller')
-const { ProductsService } = require('../services/products.servicee')
+const { ProductsService } = require('../services/products.service')
 const Router = require('./router')
 
 const withController = callback => {
