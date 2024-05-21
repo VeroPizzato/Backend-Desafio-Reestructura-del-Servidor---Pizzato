@@ -1,4 +1,3 @@
-
 class CartsController {
 
     constructor(cartsService) {
@@ -6,9 +5,9 @@ class CartsController {
     }
 
     getCarts = async (_, res) => {
-        try {
-            const carts = await this.service.getCarts()
-            return res.Success(carts)
+        try {         
+            const carts = await this.service.getCarts()      
+            return res.sendSuccess(carts)
         }
         catch (err) {
             return res.sendServerError(err)

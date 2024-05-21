@@ -1,11 +1,20 @@
+const { CartsStorage } = require('../persistence/carts.storage')
+const { CartsService } = require('../services/carts.service')
+const { ProductsStorage } = require('../persistence/products.storage')
+const { ProductsService } = require('../services/products.service')
+
+const cartsStorage = new CartsStorage()
+const cartsService = new CartsService(cartsStorage)
+const productsStorage = new ProductsStorage()
+const productsService = new ProductsService(productsStorage)
+
 module.exports = {
     // Middleware para validacion de datos al agregar un carrito 
     validarNuevoCarrito: async (req, res, next) => {
-        try {
-            const ProductManager = req.app.get('ProductManager')
+        try {            
             const { products } = req.body
             products.forEach(async producto => {
-                const prod = await ProductManager.getProductById(producto._id)
+                const prod = await productsService.getProductById(producto._id)
                 if (!prod) {
                     res.status(400).json({ error: "Producto con ID:" + producto._id + " not Found" })
                     return
@@ -25,13 +34,12 @@ module.exports = {
     // Middleware para validacion de carrito existente 
     validarCarritoExistente: async (req, res, next) => {
         try {
-            const CartManager = req.app.get('CartManager')
             let cId = req.params.cid
             // if (isNaN(cId)) {
             //     res.status(400).json({ error: "Invalid number format" })
             //     return
             // }
-            const cart = await CartManager.getCartByCId(cId)
+            const cart = await cartsService.getCartByCId(cId)
             if (!cart) {
                 res.status(400).json({ error: "Carrito con ID:" + cId + " not Found" })
                 return

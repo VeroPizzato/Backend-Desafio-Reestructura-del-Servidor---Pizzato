@@ -1,6 +1,6 @@
 const ProductModel = require('../dao/models/products')
 
-class ProductManager {
+class ProductsStorage {
 
     static #ultimoIdProducto = 1
 
@@ -14,7 +14,7 @@ class ProductManager {
         }
         else {
             const products = await this.getProducts({})
-            ProductManager.#ultimoIdProducto = this.#getNuevoIdInicio(products.docs)
+            ProductsStorage.#ultimoIdProducto = this.#getNuevoIdInicio(products.docs)
         }
     }
 
@@ -45,10 +45,10 @@ class ProductManager {
                 // return filteredProducts.docs.map(d => d.toObject({ virtuals: true }))
                 return filteredProducts
             }
-           
+
             if (!page) page = 1
             const { limit, category, availability, sort } = { limit: 10, page: page, availability: 1, sort: 'asc', ...filters }
-         
+
             if (availability == 1) {
                 if (category)
                     filteredProducts = await ProductModel.paginate({ category: category, stock: { $gt: 0 } }, { limit: limit, page: page, sort: { price: sort }, lean: true })
@@ -81,10 +81,10 @@ class ProductManager {
     }
 
     #getNuevoId() {
-        const id = ProductManager.#ultimoIdProducto
-        ProductManager.#ultimoIdProducto++
+        const id = ProductsStorage.#ultimoIdProducto
+        ProductsStorage.#ultimoIdProducto++
         return id
-    }   
+    }  
 
     addProduct = async (title, description, price, thumbnail, code, stock, status, category) => {
         let product = await ProductModel.create({
@@ -109,4 +109,4 @@ class ProductManager {
     }
 }
 
-module.exports = ProductManager
+module.exports = { ProductsStorage }

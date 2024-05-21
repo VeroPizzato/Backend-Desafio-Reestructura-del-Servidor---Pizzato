@@ -1,8 +1,7 @@
 const { validarNuevoCarrito, validarCarritoExistente } = require('../middlewares/cart.middleware')
 const { validarProductoExistente } = require('../middlewares/product.middleware')
 const { CartsController } = require('../controllers/carts.controller')
-const { CartsService } = require('../services/cartsService')
-
+const { CartsService } = require('../services/carts.service')
 const Router = require('./router')
 
 const withController = callback => {

@@ -1,8 +1,11 @@
 const CartModel = require('../dao/models/cart')
 
-class CartsStorage {
-
+class CartsStorage {   
+    
     static #ultimoIdCart = 1
+    
+    constructor() {        
+    }
 
     inicialize = async () => {
         // No hacer nada
@@ -33,8 +36,8 @@ class CartsStorage {
     }
 
     getCarts = async () => {
-        try {
-            const carts = await CartModel.find()
+        try {            
+            const carts = await CartModel.find()      
             return carts.map(d => d.toObject({ virtuals: true }))
         }
         catch (err) {

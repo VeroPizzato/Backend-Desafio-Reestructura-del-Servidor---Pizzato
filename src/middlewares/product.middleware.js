@@ -1,3 +1,9 @@
+const { ProductsStorage } = require('../persistence/products.storage')
+const { ProductsService } = require('../services/products.service')
+
+const productsStorage = new ProductsStorage()
+const productsService = new ProductsService(productsStorage)
+
 const soloNumYletras = (code) => {
     return (/^[a-z A-Z 0-9]+$/.test(code))
 }
@@ -12,8 +18,7 @@ const soloNumPositivosYcero = (code) => {
 
 // Middleware para validacion de datos al agregar un producto 
 const validarNuevoProducto = async (req, res, next) => {
-    try {
-        const ProductManager = req.app.get('ProductManager')
+    try {       
         const product = req.body
         product.price = +product.price
         product.stock = +product.stock
@@ -52,7 +57,7 @@ const validarNuevoProducto = async (req, res, next) => {
                 return
             }
         }
-        const listadoProductos = await ProductManager.getProducts(req.query)
+        const listadoProductos = await productsService.getProducts(req.query)
         const codeIndex = listadoProductos.docs.findIndex(e => e.code === product.code)
         if (codeIndex !== -1) {
             res.status(400).json({ error: "Codigo ya existente" })
@@ -76,12 +81,11 @@ const validarNuevoProducto = async (req, res, next) => {
 // Middleware para validacion de datos al actualizar un producto 
 // Si algun dato es vacio no se actualiza
 const validarProdActualizado = async (req, res, next) => {
-    try {
-        const ProductManager = req.app.get('ProductManager')
+    try {        
         const { title, description, price, thumbnail, code, stock, status, category } = req.body
         let idProd = req.params.pid
 
-        const listadoProductos = await ProductManager.getProducts(req.query)
+        const listadoProductos = await productsService.getProducts(req.query)
         const codeIndex = listadoProductos.docs.findIndex(e => e._id.toString() === idProd)
         if (codeIndex === -1) {
             res.status(400).json({ error: "Producto con ID:" + idProd + " not Found" })
@@ -144,14 +148,13 @@ const validarProdActualizado = async (req, res, next) => {
 
 // Middleware para validacion de datos de un producto 
 const validarProductoExistente = async (req, res, next) => {
-    try {
-        const ProductManager = req.app.get('ProductManager')
+    try {       
         let prodId = req.params.pid
         // if (isNaN(prodId)) {
         //     res.status(400).json({ error: "Formato invalido." })
         //     return
         // }
-        const producto = await ProductManager.getProductById(prodId)
+        const producto = await productsService.getProductById(prodId)
         if (!producto) {
             res.status(404).json({ error: "Id inexistente!" })  // HTTP 404 => el ID es válido, pero no se encontró ese producto
             return

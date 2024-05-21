@@ -6,11 +6,11 @@ const session = require('express-session')
 const MongoStore = require('connect-mongo')
 const cookieParser = require('cookie-parser')
 const config = require('./config/config')
-const { CartsStorage } = require('./persistence/cartsStorage')
-// const { JwtStorage } = require('./persistence/jwtStorage')
-// const { ProductsStorage } = require('./persistence/productsStorage')
-// const { SessionStorage } = require('./persistence/sessionStorage')
-// const { ViewsStorage } = require('./persistence/viewsStorage')
+const { CartsStorage } = require('./persistence/carts.storage')
+const { JwtStorage } = require('./persistence/jwtStorage')
+const { ProductsStorage } = require('./persistence/productsStorage')
+const { SessionStorage } = require('./persistence/sessionStorage')
+const { ViewsStorage } = require('./persistence/viewsStorage')
 
 const CartsRouter = require('./routes/carts.router')
 const cartsRouter = new CartsRouter()
@@ -55,7 +55,7 @@ const handlebars = handlebarsExpress.create({
     }
 })
 app.engine("handlebars", handlebars.engine)
-app.set("views" , `${__dirname}/views`)
+app.set("views", `${__dirname}/views`)
 app.set("view engine", "handlebars")
 
 app.use('/products/detail', express.static(`${__dirname}/../public`));  // para encontrar la carpeta public
@@ -64,9 +64,9 @@ app.use('/carts', express.static(`${__dirname}/../public`));
 app.use(session({
     store: MongoStore.create({
         dbName: config.DB_NAME,
-        mongoUrl: config.MONGO_URL, 
+        mongoUrl: config.MONGO_URL,
         ttl: 60
-    }),  
+    }),
     secret: 'secretCoder',
     resave: true,
     saveUninitialized: true
@@ -76,12 +76,6 @@ app.use(cookieParser())
 initializeStrategy()
 app.use(passport.initialize())
 app.use(passport.session())
-
-app.set('carts.storage', new CartsStorage())
-// app.set('jwt.storage', new JwtStorage())
-// app.set('products.storage', new ProductsStorage())
-// app.set('session.storage', new SessionStorage())
-// app.set('views.storage', new ViewsStorage())
 
 app.use('/api/products', productsRouter.getRouter())
 app.use('/api/carts', cartsRouter.getRouter())
@@ -95,15 +89,29 @@ const main = async () => {
         {
             dbName: config.DB_NAME
         })
-   
-    const ProductManager = new DbProductManager()
-    await ProductManager.inicialize()
-    app.set('ProductManager', ProductManager)
 
-    const CartManager = new DbCartManager()
-    await CartManager.inicialize()
-    app.set('CartManager', CartManager)
+    const cartsStorage = new CartsStorage();
+    await cartsStorage.inicialize()
+    app.set('carts.storage', cartsStorage)
+
+    app.set('jwt.storage', new JwtStorage())
+
+    const productsStorage = new ProductsStorage();
+    await productsStorage.inicialize()
+    app.set('products.storage', productsStorage)
+
+    app.set('session.storage', new SessionStorage())
     
+    app.set('views.storage', new ViewsStorage())
+
+    // const ProductManager = new DbProductManager()
+    // await ProductManager.inicialize()
+    // app.set('ProductManager', ProductManager)
+
+    // const CartManager = new DbCartManager()
+    // await CartManager.inicialize()
+    // app.set('CartManager', CartManager)
+
     // const filenameProd = `${__dirname}/../productos.json`    
     // const ProductManager = new FilesProductManager(filenameProd)
     // await ProductManager.inicialize()
@@ -159,7 +167,7 @@ const main = async () => {
 
         // Escucho el evento 'deleteProduct' emitido por el cliente
         clientSocket.on('deleteProduct', async (productId) => {
-            try {             
+            try {
                 await ProductManager.deleteProduct(productId);
                 // Emitir evento 'productDeleted' a los clientes
                 io.emit('productDeleted', productId);
