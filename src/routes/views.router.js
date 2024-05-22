@@ -3,14 +3,15 @@ const { userIsLoggedIn, userIsNotLoggedIn, userIsAdmin } = require('../middlewar
 const { ViewsController } = require('../controllers/views.controller')
 const { CartsService } = require('../services/carts.service')
 const { ProductsService } = require('../services/products.service')
+
 const Router = require('./router')
 
 const withController = callback => {
-    return (req, res) => {
-        const cartsService = new CartsService(
+    return (req, res) => {      
+        const cartsService = new CartsService(           
             req.app.get('carts.storage')
-        )               
-        const productsService = new ProductsService(
+        )                    
+        const productsService = new ProductsService(           
             req.app.get('products.storage')
         )             
         const controller = new ViewsController(cartsService, productsService)
