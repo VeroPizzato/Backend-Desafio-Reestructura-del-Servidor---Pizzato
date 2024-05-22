@@ -29,7 +29,7 @@ class ProductsStorage {
     }
 
     getProducts = async (filters) => {
-        try {
+        try {                     
             let filteredProducts = await ProductModel.find()
 
             if (JSON.stringify(filters) === '{}') {  // vienen vacios los filtros            

@@ -75,8 +75,8 @@ class ViewsController {
     }
 
     async getProducts (req, res) {
-        try {
-            let products = await productsService.getProducts(req.query)
+        try {             
+            let products = await this.productsService.getProducts(req.query) 
             let user = req.session.user
             res.render('home', {
                 title: 'Home',
@@ -84,7 +84,8 @@ class ViewsController {
                 products,
                 user
             })
-        } catch (err) {
+        } catch (err) { 
+            console.log(err)                
             return res.sendServerError(err)
             //return res.status(500).json({ message: err.message })            
         }
@@ -93,7 +94,7 @@ class ViewsController {
     async getProductDetail (req, res) {
         try {
             const prodId = req.pid
-            const product = await productsService.getProductById(prodId)
+            const product = await this.productsService.getProductById(prodId)
             let data = {
                 title: 'Product Detail',
                 scripts: ['productoDetail.js'],
@@ -113,9 +114,9 @@ class ViewsController {
         try {
             const prodId = req.pid
             //agrego una unidad del producto al primer carrito que siempre existe
-            const carts = await cartsService.getCarts()
+            const carts = await this.cartsService.getCarts()
             // console.log(JSON.stringify(carts, null, '\t'))    
-            await cartsService.addProductToCart(carts[0]._id.toString(), prodId, 1);
+            await this.cartsService.addProductToCart(carts[0]._id.toString(), prodId, 1);
             //res.redirect(`/products/detail/${prodId}`)  
         }
         catch (err) {
@@ -127,7 +128,7 @@ class ViewsController {
     async getCartById (req, res) {
         try {
             const cartId = req.cid
-            const cart = await cartsService.getCartByCId(cartId)
+            const cart = await this.cartsService.getCartByCId(cartId)
             let data = {
                 title: 'Cart Detail',
                 styles: ['styles.css'],
@@ -144,7 +145,7 @@ class ViewsController {
 
     async getRealTimeProducts (req, res) {
         try {
-            const products = await productsService.getProducts(req.query)
+            const products = await this.productsService.getProducts(req.query)
             res.render('realTimeProducts', {
                 title: 'Productos en tiempo real',
                 styles: ['styles.css'],
@@ -169,7 +170,7 @@ class ViewsController {
             product.thumbnail = ["/images/" + product.thumbnail]
             product.price = +product.price
             product.stock = +product.stock
-            await productsService.addProduct(
+            await this.productsService.addProduct(
                 product.title,
                 product.description,
                 +product.price,

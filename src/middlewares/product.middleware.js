@@ -57,7 +57,7 @@ const validarNuevoProducto = async (req, res, next) => {
                 return
             }
         }
-        const listadoProductos = await productsService.getProducts(req.query)
+        const listadoProductos = await this.productsService.getProducts(req.query)
         const codeIndex = listadoProductos.docs.findIndex(e => e.code === product.code)
         if (codeIndex !== -1) {
             res.status(400).json({ error: "Codigo ya existente" })
@@ -85,7 +85,7 @@ const validarProdActualizado = async (req, res, next) => {
         const { title, description, price, thumbnail, code, stock, status, category } = req.body
         let idProd = req.params.pid
 
-        const listadoProductos = await productsService.getProducts(req.query)
+        const listadoProductos = await this.productsService.getProducts(req.query)
         const codeIndex = listadoProductos.docs.findIndex(e => e._id.toString() === idProd)
         if (codeIndex === -1) {
             res.status(400).json({ error: "Producto con ID:" + idProd + " not Found" })
@@ -154,7 +154,7 @@ const validarProductoExistente = async (req, res, next) => {
         //     res.status(400).json({ error: "Formato invalido." })
         //     return
         // }
-        const producto = await productsService.getProductById(prodId)
+        const producto = await this.productsService.getProductById(prodId)
         if (!producto) {
             res.status(404).json({ error: "Id inexistente!" })  // HTTP 404 => el ID es válido, pero no se encontró ese producto
             return

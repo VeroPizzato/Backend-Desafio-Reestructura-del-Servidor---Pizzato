@@ -14,7 +14,7 @@ module.exports = {
         try {            
             const { products } = req.body
             products.forEach(async producto => {
-                const prod = await productsService.getProductById(producto._id)
+                const prod = await this.productsService.getProductById(producto._id)
                 if (!prod) {
                     res.status(400).json({ error: "Producto con ID:" + producto._id + " not Found" })
                     return
@@ -39,7 +39,7 @@ module.exports = {
             //     res.status(400).json({ error: "Invalid number format" })
             //     return
             // }
-            const cart = await cartsService.getCartByCId(cId)
+            const cart = await this.cartsService.getCartByCId(cId)
             if (!cart) {
                 res.status(400).json({ error: "Carrito con ID:" + cId + " not Found" })
                 return

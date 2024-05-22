@@ -5,6 +5,7 @@ const { CartsService } = require('../services/carts.service')
 const { ProductsService } = require('../services/products.service')
 
 const Router = require('./router')
+const { ProductsStorage } = require('../persistence/products.storage')
 
 const withController = callback => {
     return (req, res) => {        

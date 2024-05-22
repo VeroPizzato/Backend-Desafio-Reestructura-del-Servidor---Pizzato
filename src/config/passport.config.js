@@ -44,7 +44,7 @@ const initializeStrategy = () => {
             const first_name = fullName.substring(0, fullName.lastIndexOf(' '))
             const last_name = fullName.substring(fullName.lastIndexOf(' ') + 1)
 
-            const newUser = {
+            const newUser = {               
                 first_name,
                 last_name,
                 age: 47,
@@ -138,6 +138,7 @@ const initializeStrategy = () => {
             if (username === config.ADMIN_EMAIL && password === config.ADMIN_PASSWORD) {
                 // Datos de sesión para el usuario coder Admin
                 user = {
+                    _id: "jh235hlki23463nkhlo",
                     first_name: "Usuario",
                     last_name: "de CODER",
                     age: 21,
@@ -170,10 +171,10 @@ const initializeStrategy = () => {
     // passport necesita serializar este modelo, para guardar una referencia al usuario en la sesión
     // simplemente podemos usar su id
     passport.serializeUser((user, done) => {
-        console.log('serialized!', user)
+        // console.log('serialized!', user)
         if (user.email === config.ADMIN_EMAIL) {
             // Serialización especial para el usuario 'adminCoder@coder.com'
-            done(null, { first_name: user.first_name, last_name: user.last_name, age: user.age, email: user.email, rol: user.rol });
+            done(null, { _id: user._id, first_name: user.first_name, last_name: user.last_name, age: user.age, email: user.email, rol: user.rol, cart: user.cart });
         } else {
             done(null, user._id)
         }
@@ -182,7 +183,7 @@ const initializeStrategy = () => {
     // para restaurar al usuario desde la sesión, passport utiliza el valor serializado y vuelve a generar al user
     // el cual colocará en req.user para que nosotros podamos usar
     passport.deserializeUser(async (id, done) => {
-        console.log('deserialized!', id)
+        //console.log('deserialized!', id)
         if (id.email === config.ADMIN_EMAIL) {
             // Deserialización especial para el usuario 'adminCoder@coder.com'
             done(null, id);

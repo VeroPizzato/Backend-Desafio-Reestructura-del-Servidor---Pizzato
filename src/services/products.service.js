@@ -4,7 +4,7 @@ class ProductsService {
         this.storage = storage       
     }
 
-    async getProducts (filters) {
+    async getProducts (filters) {    
         return await this.storage.getProducts(filters)
     }
 

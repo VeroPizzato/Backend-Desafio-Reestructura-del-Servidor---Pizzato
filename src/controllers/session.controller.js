@@ -3,13 +3,13 @@ class SessionController {
     constructor() {
     }
 
-    login (req, res) {
-        console.log("entreeee")
+    login (req, res) {      
         if (!req.user) return res.sendUserError('Invalid credentials!')
         //if (!req.user) return res.status(400).send('Invalid credentials!')
         // crear nueva sesión si el usuario existe   
-        req.session.user = { first_name: req.user.first_name, last_name: req.user.last_name, age: req.user.age, email: req.user.email, rol: req.user.rol }
-        res.redirect('/products')
+        //console.log(req.user)
+        req.session.user = { _id: req.user._id, first_name: req.user.first_name, last_name: req.user.last_name, age: req.user.age, email: req.user.email, rol: req.user.rol, cart: req.user.cart }
+        return res.redirect('/products')
     }
 
     faillogin (req, res) {
@@ -51,7 +51,7 @@ class SessionController {
     current (req, res) {
         if (!req.user) return res.sendUserError('No hay usuario logueado')
             //if (!req.user) return res.status(400).send('No hay usuario logueado')
-            req.session.user = { first_name: req.user.first_name, last_name: req.user.last_name, age: req.user.age, email: req.user.email, rol: req.user.rol }
+            req.session.user = { _id: req.user._id, first_name: req.user.first_name, last_name: req.user.last_name, age: req.user.age, email: req.user.email, rol: req.user.rol, cart: req.user.cart }
             res.redirect('/profile')
     }
 }
