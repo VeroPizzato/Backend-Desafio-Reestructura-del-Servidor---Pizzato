@@ -20,14 +20,12 @@ class ViewsController {
     }
 
     login (req, res) {
-        try {
-            console.log("TRY")
+        try {            
             // middleware userIsNotLoggedIn: sólo se puede acceder si no está logueado
             res.render('login', {
                 title: 'Login'
             })
-        } catch (err) {
-            console.log("catch")
+        } catch (err) {           
             return res.sendServerError(err)
             //return res.status(500).json({ message: err.message })
         }

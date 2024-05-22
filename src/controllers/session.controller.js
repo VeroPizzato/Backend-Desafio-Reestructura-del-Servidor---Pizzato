@@ -4,6 +4,7 @@ class SessionController {
     }
 
     login (req, res) {
+        console.log("entreeee")
         if (!req.user) return res.sendUserError('Invalid credentials!')
         //if (!req.user) return res.status(400).send('Invalid credentials!')
         // crear nueva sesión si el usuario existe   
