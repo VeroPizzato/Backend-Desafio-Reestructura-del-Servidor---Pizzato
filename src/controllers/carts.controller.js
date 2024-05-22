@@ -4,7 +4,7 @@ class CartsController {
         this.service = cartsService
     }
 
-    getCarts = async (_, res) => {
+    async getCarts (_, res) {
         try {         
             const carts = await this.service.getCarts()      
             return res.sendSuccess(carts)
@@ -17,7 +17,7 @@ class CartsController {
         }
     }
 
-    getCartByCId = async (req, res) => {
+    async getCartByCId (req, res) {
         try {
             let cidCart = req.cid
             let cartByCID = await this.service.getCartByCId(cidCart)
@@ -36,7 +36,7 @@ class CartsController {
         }
     }
 
-    addCart = async (req, res) => {
+    async addCart (req, res) {
         try {
             let { products } = req.body
             await this.service.addCart(products)
@@ -51,7 +51,7 @@ class CartsController {
         }
     }
 
-    createProductToCart = async (req, res) => {
+    async createProductToCart (req, res) {
         try {
             let idCart = req.cid
             let idProd = req.pid
@@ -67,7 +67,7 @@ class CartsController {
         }
     }
 
-    updateCartProducts = async (req, res) => {
+    async updateCartProducts (req, res) {
         try {
             let cartId = req.cid
             const { products } = req.body
@@ -81,7 +81,7 @@ class CartsController {
         }
     }
 
-    updateProductToCart = async (req, res) => {
+    async updateProductToCart (req, res) {
         try {
             let cartId = req.cid
             let prodId = req.pid
@@ -102,7 +102,7 @@ class CartsController {
         }
     }
 
-    deleteCart = async (req, res) => {
+    async deleteCart (req, res) {
         try {
             let cartId = req.cid
             await this.service.deleteCart(cartId)
@@ -115,7 +115,7 @@ class CartsController {
         }
     }
 
-    deleteProductToCart = async (req, res) => {
+    async deleteProductToCart (req, res) {
         try {
             let cartId = req.cid
             let prodId = req.pid
@@ -135,7 +135,7 @@ class CartsController {
         }
     }
 
-    // deleteAllProductCart = async (req, res) => {
+    // async deleteAllProductCart (req, res) {
     //     try {
     //         let cartId = req.cid
     //         await this.service.deleteAllProductCart(cartId)

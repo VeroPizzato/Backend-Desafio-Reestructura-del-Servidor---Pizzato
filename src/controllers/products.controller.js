@@ -4,7 +4,7 @@ class ProductsController {
         this.service = productsService
     }
 
-    getProducts = async (req, res) => {
+    async getProducts (req, res) {
         try {
             const products = await this.service.getProducts(req.query)
             const result = {
@@ -39,7 +39,7 @@ class ProductsController {
         }
     }
 
-    getProductById = async (req, res) => {
+    async getProductById (req, res) {
         try {
             const prodId = req.pid
             const producto = await this.service.getProductById(prodId)
@@ -57,7 +57,7 @@ class ProductsController {
         }
     }
 
-    addProduct = async (req, res) => {
+    async addProduct (req, res) {
         try {
             const { title, description, price, thumbnail, code, stock, status, category } = req.body
             await ProductManager.addProduct(title, description, price, thumbnail, code, stock, status, category)
@@ -71,7 +71,7 @@ class ProductsController {
         }
     }
 
-    updateProduct = async (req, res) => {
+    async updateProduct (req, res) {
         try {
             const prodId = req.pid
             const datosAUpdate = req.body
@@ -95,7 +95,7 @@ class ProductsController {
         }
     }
 
-    delete = async (req, res) => {
+    async delete (req, res) {
         try {            
             const prodId = req.pid
             const producto = await this.service.getProductById(prodId)

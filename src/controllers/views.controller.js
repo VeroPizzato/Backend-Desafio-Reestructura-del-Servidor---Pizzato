@@ -1,37 +1,39 @@
 class ViewsController {
 
-    constructor(cartsService, productsService) {
+    constructor(cartsService, productsService) {         
         this.cartsService = cartsService
         this.productsService = productsService
     }
 
-    home = (req, res) => {
-        try {
+    home (req, res) {
+        try {                 
             const isLoggedIn = ![null, undefined].includes(req.session.user)
             res.render('index', {
                 title: 'Inicio',
                 isLoggedIn,
                 isNotLoggedIn: !isLoggedIn,
             })
-        } catch (err) {
+        } catch (err) {          
             return res.sendServerError(err)
             //return res.status(500).json({ message: err.message })
         }
     }
 
-    login = (_, res) => {
+    login (req, res) {
         try {
+            console.log("TRY")
             // middleware userIsNotLoggedIn: sólo se puede acceder si no está logueado
             res.render('login', {
                 title: 'Login'
             })
         } catch (err) {
+            console.log("catch")
             return res.sendServerError(err)
             //return res.status(500).json({ message: err.message })
         }
     }
 
-    reset_password = (_, res) => {
+    reset_password (req, res) {
         try {
             // middleware userIsNotLoggedIn: sólo se puede acceder si no está logueado
             res.render('reset_password', {
@@ -43,7 +45,7 @@ class ViewsController {
         }
     }
 
-    register = (_, res) => {
+    register (req, res) {
         try {
             // middleware userIsNotLoggedIn: sólo se puede acceder si no está logueado
             res.render('register', {
@@ -55,7 +57,7 @@ class ViewsController {
         }
     }
 
-    profile = (req, res) => {
+    profile (req, res) {
         try {
             //sólo se puede acceder si está logueado
             let user = req.session.user
@@ -74,7 +76,7 @@ class ViewsController {
         }
     }
 
-    getProducts = async (req, res) => {
+    async getProducts (req, res) {
         try {
             let products = await productsService.getProducts(req.query)
             let user = req.session.user
@@ -90,7 +92,7 @@ class ViewsController {
         }
     }
 
-    getProductDetail = async (req, res) => {
+    async getProductDetail (req, res) {
         try {
             const prodId = req.pid
             const product = await productsService.getProductById(prodId)
@@ -109,7 +111,7 @@ class ViewsController {
         }
     }
 
-    addProductToCart = async (req, res) => {
+    async addProductToCart (req, res) {
         try {
             const prodId = req.pid
             //agrego una unidad del producto al primer carrito que siempre existe
@@ -124,7 +126,7 @@ class ViewsController {
         }
     }
 
-    getCartById = async (req, res) => {
+    async getCartById (req, res) {
         try {
             const cartId = req.cid
             const cart = await cartsService.getCartByCId(cartId)
@@ -142,7 +144,7 @@ class ViewsController {
         }
     }
 
-    getRealTimeProducts = async (req, res) => {
+    async getRealTimeProducts (req, res) {
         try {
             const products = await productsService.getProducts(req.query)
             res.render('realTimeProducts', {
@@ -161,7 +163,7 @@ class ViewsController {
         }
     }
 
-    postRealTimeProducts = async (req, res) => {
+    async postRealTimeProducts (req, res) {
         try {
             const product = req.body
             // Convertir el valor status "true" o "false" a booleano        
@@ -189,7 +191,7 @@ class ViewsController {
         }
     }
 
-    newProduct = async (_, res) => {
+    async newProduct (req, res) {
         try {
             res.render('newProduct', {
                 title: 'Nuevo Producto',
@@ -201,7 +203,7 @@ class ViewsController {
         }
     }
 
-    chat = async (_, res) => {
+    async chat (req, res) {
         try {
             res.render('chat', {
                 title: 'Aplicación de chat',

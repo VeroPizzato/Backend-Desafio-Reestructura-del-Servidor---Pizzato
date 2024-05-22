@@ -13,7 +13,7 @@ class JwtController {
         }
     }
 
-    login = async (req, res) => {
+    login (req, res) {
         try {
             const { email, password } = req.body
             if (!email || !password) {
@@ -34,7 +34,7 @@ class JwtController {
         }
     }
 
-    private = (req, res) => {
+    private (req, res) {
         try {
             const { email } = req.authUser
             //res.send(`Welcome ${email}, this is private and protected content`)
@@ -46,7 +46,7 @@ class JwtController {
         }
     }
 
-    current = (req, res) => {
+    current (req, res) {
         try {
             res.sendSuccess(req.user)
             //return res.json(req.user);

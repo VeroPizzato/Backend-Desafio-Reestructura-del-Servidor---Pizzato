@@ -7,7 +7,7 @@ const { ProductsService } = require('../services/products.service')
 const Router = require('./router')
 
 const withController = callback => {
-    return (req, res) => {      
+    return (req, res) => {        
         const cartsService = new CartsService(           
             req.app.get('carts.storage')
         )                    
@@ -41,11 +41,11 @@ class ViewsRouter extends Router {
 
         this.get('/', withController((controller, req, res) => controller.home(req, res)))
 
-        this.get('/login', userIsNotLoggedIn, withController((controller, req, res) => controller.login(_, res)))
+        this.get('/login', userIsNotLoggedIn, withController((controller, req, res) => controller.login(req, res)))
         
-        this.get('/reset_password', userIsNotLoggedIn, withController((controller, req, res) => controller.resetPassword(_, res)))
+        this.get('/reset_password', userIsNotLoggedIn, withController((controller, req, res) => controller.resetPassword(req, res)))
 
-        this.get('/register', userIsNotLoggedIn, withController((controller, req, res) => controller.register(_, res)))
+        this.get('/register', userIsNotLoggedIn, withController((controller, req, res) => controller.register(req, res)))
 
         this.get('/profile', userIsLoggedIn, withController((controller, req, res) => controller.profile(req, res)))
         
@@ -61,9 +61,9 @@ class ViewsRouter extends Router {
 
         this.post('/realtimeproducts', validarNuevoProducto, userIsLoggedIn, userIsAdmin, withController((controller, req, res) => controller.postRealTimeProducts(req, res)))
 
-        this.get('/newProduct', userIsLoggedIn, userIsAdmin, withController((controller, req, res) => controller.createProduct(_, res)))
+        this.get('/newProduct', userIsLoggedIn, userIsAdmin, withController((controller, req, res) => controller.createProduct(req, res)))
 
-        this.get('/chat', withController((controller, req, res) => controller.chat(_, res)))     
+        this.get('/chat', withController((controller, req, res) => controller.chat(req, res)))     
     }
 }
 

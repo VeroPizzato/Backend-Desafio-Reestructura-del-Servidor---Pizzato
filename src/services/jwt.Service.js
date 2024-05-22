@@ -7,7 +7,7 @@ class JwtServices {
         this.storage = storage
     }
 
-    login = async (email, password) => {      
+    async login (email, password) {      
         let user
         if (email === config.ADMIN_EMAIL && password === config.ADMIN_PASSWORD) {
             // Datos de sesión para el usuario coder Admin

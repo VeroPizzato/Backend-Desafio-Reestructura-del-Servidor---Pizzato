@@ -4,35 +4,35 @@ class CartsService {
         this.storage = storage
     }
 
-    getCarts = async() => {
+    async getCarts () {
         return await this.storage.getCarts()
     }
 
-    getCartByCId = async(cid) => {
+    async getCartByCId (cid) {
         return await this.storage.getCartByCId(cid)
     }
 
-    addCart = async (products) => {
+    async addCart (products) {
         await this.storage.addCart(products)
     }
 
-    addProductToCart = async (cartId, prodId, quantity) => {        
+    async addProductToCart (cartId, prodId, quantity) {        
         await this.storage.addProductToCart(cartId, prodId, quantity);       
     }
 
-    updateCartProducts = async (cartId, products) => {  
+    async updateCartProducts (cartId, products) {  
         await this.storage.updateCartProducts(cartId, products)
     }   
 
-    deleteCart = async (cid) => {
+    async deleteCart (cid) {
         await this.storage.deleteCart(cid)
     }
 
-    deleteProductToCart = async (cartId, prodId) => {
+    async deleteProductToCart (cartId, prodId) {
         return await this.storage.deleteProductToCart(cartId, prodId)
     }
 
-    // deleteAllProductCart = async (cartId) => {
+    // async deleteAllProductCart (cartId) {
     //     return await this.storage.deleteAllProductCart(cartId)
     // }
 }
