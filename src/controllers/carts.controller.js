@@ -4,7 +4,7 @@ class CartsController {
         this.service = cartsService
     }
 
-    async getCarts (_, res) {
+    async getCarts (req, res) {
         try {         
             const carts = await this.service.getCarts()      
             return res.sendSuccess(carts)

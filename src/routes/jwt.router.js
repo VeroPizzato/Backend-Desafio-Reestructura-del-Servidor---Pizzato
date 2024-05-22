@@ -26,19 +26,7 @@ class JwtRouter extends Router {
 
         this.get('/private', verifyToken, withController((controller, req, res) => controller.private(req, res)))
 
-        this.get('/current', passportMiddleware('jwt'), /*authorizationMiddleware('user'),*/ withController((controller, req, res) => controller.current(req, res)))
-
-      
-
-        // Para devolver un error mas significativo durante mis estrategias de passport si no le mando token o mando un token erroneo
-        this.get('/current', passportMiddleware('jwt'), /*authorizationMiddleware('user'),*/ async (req, res) => {
-            return res.json(req.user);
-        });
-
-        // this.get('/current', passportMiddleware('jwt'), authorizationMiddleware('admin'), async (req, res) => { 
-        //     return res.json(req.user);  
-        // });
-
+        this.get('/current', passportMiddleware('jwt'), withController((controller, req, res) => controller.current(req, res))) 
     }
 }
 module.exports = JwtRouter

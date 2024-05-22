@@ -11,7 +11,7 @@ class SessionController {
         res.redirect('/products')
     }
 
-    faillogin (_, res) {
+    faillogin (req, res) {
         res.sendUnauthorized('Login failed!')
         //res.send({ status: 'error', message: 'Login failed!' })
     }
@@ -28,21 +28,21 @@ class SessionController {
         res.redirect('/login')
     }
 
-    failregister (_, res) {
+    failregister (req, res) {
         res.sendUserError('Register failed!')
         //res.send({ status: 'error', message: 'Register failed!' })
     }
 
-    reset_password (_, res) {
+    reset_password (req, res) {
         res.redirect('/login')
     }
 
-    failreset (_, res) {
+    failreset (req, res) {
         res.sendUserError('Reset password failed!')
         //res.send({ status: 'error', message: 'Reset password failed!' })
     }
 
-    githubcallback (_, res) {
+    githubcallback (req, res) {
         req.session.user = req.user
         res.redirect('/products')
     }
